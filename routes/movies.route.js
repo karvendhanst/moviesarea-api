@@ -7,8 +7,8 @@ router.get("/", movieIndex)
 
 router.post("/", movieCreate)
 
-router.put("/", movieUpdate)
+router.put("/:id", movieUpdate)
 
-router.delete("/", movieDelete)
+router.delete("/:id", movieDelete)
 
 module.exports = router

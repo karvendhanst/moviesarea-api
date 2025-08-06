@@ -1,7 +1,12 @@
 import Movie from "../models/movie.model.js";
 
-export const movieIndex = (req, res)=>{
-    res.send("Get Movies List")
+export const movieIndex = async(req, res)=>{
+    try{
+        const movies = await Movie.find()
+        res.json(movies)
+    }catch(error){
+        res.json({message: error.message})
+    }
 } 
 
 export const movieCreate = async(req, res)=>{
@@ -12,17 +17,33 @@ export const movieCreate = async(req, res)=>{
 
     try{
         const movie = await newMovie.save()
-        return res.status(201).json(movie)
+        res.status(201).json(movie)
     }
     catch(error){
-        return res.status(400).json({ message: error.message})
+        res.status(400).json({ message: error.message})
     }
 } 
 
-export const movieUpdate = (req, res)=>{
-    res.send("Update a Movie")
+export const movieUpdate = async(req, res)=>{
+   try{
+    const updatedMovie = await Movie.findOneAndUpdate(
+        {_id: req.params.id}, 
+        {
+        title: req.body.title,
+        desc: req.body.desc,
+        }
+)
+    res.status(200).json(updatedMovie)
+   }catch(error){
+    res.status(400).json({message: error.message})
+   }
 } 
 
-export const movieDelete = (req, res)=>{
-    res.send("Delete a Movie")
-} 
+export const movieDelete = async(req, res)=>{
+    try{
+        const deletedMovie = await Movie.findByIdAndDelete(req.params.id);
+        res.status(200).json(deletedMovie)
+    }catch(error){
+        res.status(500).json({message: error.message})
+    } 
+}
